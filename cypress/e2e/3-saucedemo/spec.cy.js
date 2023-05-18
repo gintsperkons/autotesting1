@@ -1,5 +1,6 @@
 import LoginPage from "../../pageObjects/Login.page";
 import HomePage from "../../pageObjects/home.page";
+import CartPage from "../../pageObjects/cart.page";
 
 describe("Saucedemo", () => {
   beforeEach(() => {
@@ -41,9 +42,37 @@ describe("Saucedemo", () => {
     HomePage.SauceLabBackpackRemoveCartButton.click();
     HomePage.ShopingCartBadge.should("not.exist");
   });
-  it.only("6.Open Item and Validate title", () => {
+  it("6.Open Item and Validate title", () => {
     LoginPage.logIntoPage("standard_user", "secret_sauce");
     HomePage.SaucLabBackpackLink.click();
     HomePage.ItemTitle.invoke("text").should("eq", "Sauce Labs Backpack");
+  });
+  it.only("6.Buy Sauce Labs Backpack", () => {
+    LoginPage.logIntoPage("standard_user", "secret_sauce");
+    HomePage.SauceLabBackpackAddCartButton.click();
+    HomePage.SauceLabTShirtAddCartButton.click();
+    HomePage.ShopingCartBadge.invoke("text").should("eq", "2");
+    HomePage.ShoppingCart.click();
+    CartPage.CartList.find("div.cart_item").should("have.length", 2);
+    CartPage.CartItemsList.eq(0)
+      .invoke("text")
+      .should("eq", "Sauce Labs Backpack");
+    CartPage.CartItemsList.eq(1)
+      .invoke("text")
+      .should("eq", "Sauce Labs Bolt T-Shirt");
+    CartPage.CheckoutButton.click();
+    CartPage.NameField.type("me");
+    CartPage.LastNameField.type("you");
+    CartPage.ZIPCodeField.type("1256");
+    CartPage.ContinueButton.click();
+    CartPage.TotalSum.invoke("text").then((text) => {
+      var splitText = text.split("$")[1];
+      expect(splitText).to.equal("49.66");
+    });
+    CartPage.FinishButton.click();
+    CartPage.ThanksTitle.invoke("text").should(
+      "eq",
+      "Thank you for your order!"
+    );
   });
 });

@@ -35,6 +35,9 @@ class HomePage extends BasePage {
   static get ItemTitle() {
     return cy.get(".inventory_details_name");
   }
+  static get ShoppingCart() {
+    return cy.get(".shopping_cart_link");
+  }
 }
 
 export default HomePage;
