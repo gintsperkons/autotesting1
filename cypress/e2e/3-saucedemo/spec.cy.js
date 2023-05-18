@@ -1,6 +1,7 @@
 import LoginPage from "../../pageObjects/Login.page";
 import HomePage from "../../pageObjects/home.page";
-import CartPage from "../../pageObjects/cart.page";
+import CheckoutOne from "../../pageObjects/checkoutOne.page";
+import CheckoutTwo from "../../pageObjects/checkoutTwo.page";
 
 describe("Saucedemo", () => {
   beforeEach(() => {
@@ -53,24 +54,24 @@ describe("Saucedemo", () => {
     HomePage.SauceLabTShirtAddCartButton.click();
     HomePage.ShopingCartBadge.invoke("text").should("eq", "2");
     HomePage.ShoppingCart.click();
-    CartPage.CartList.find("div.cart_item").should("have.length", 2);
-    CartPage.CartItemsList.eq(0)
+    CheckoutOne.CartList.find("div.cart_item").should("have.length", 2);
+    CheckoutOne.CartItemsList.eq(0)
       .invoke("text")
       .should("eq", "Sauce Labs Backpack");
-    CartPage.CartItemsList.eq(1)
+    CheckoutOne.CartItemsList.eq(1)
       .invoke("text")
       .should("eq", "Sauce Labs Bolt T-Shirt");
-    CartPage.CheckoutButton.click();
-    CartPage.NameField.type("me");
-    CartPage.LastNameField.type("you");
-    CartPage.ZIPCodeField.type("1256");
-    CartPage.ContinueButton.click();
-    CartPage.TotalSum.invoke("text").then((text) => {
+    CheckoutOne.CheckoutButton.click();
+    CheckoutOne.NameField.type("me");
+    CheckoutOne.LastNameField.type("you");
+    CheckoutOne.ZIPCodeField.type("1256");
+    CheckoutOne.ContinueButton.click();
+    CheckoutTwo.TotalSum.invoke("text").then((text) => {
       var splitText = text.split("$")[1];
       expect(splitText).to.equal("49.66");
     });
-    CartPage.FinishButton.click();
-    CartPage.ThanksTitle.invoke("text").should(
+    CheckoutTwo.FinishButton.click();
+    CheckoutTwo.ThanksTitle.invoke("text").should(
       "eq",
       "Thank you for your order!"
     );
